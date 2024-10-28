@@ -41,17 +41,19 @@ class Game(db.Model):
     player = db.Column(db.String(25))
     score = db.Column(db.Integer)
     seed = db.Column(db.Integer)
+    players = db.Column(db.Integer)
 
-    def __init__(self, player, score, seed):
+    def __init__(self, player, score, seed, players):
         self.player = player
         self.score = score
         self.seed = seed
+        self.players = players
 
 # Schema
 class GameSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id", "timestamp", "player", "score", "seed")
+        fields = ("id", "timestamp", "player", "score", "seed", "players")
 
 
 SINGLE_GAME_SCHEMA = GameSchema()
@@ -79,6 +81,7 @@ def add_game():
             new_game.get("player"),
             new_game.get("score"),
             new_game.get("seed"),
+            new_game.get("players", 1),
         )
 
         db.session.add(new_game)
