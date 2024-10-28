@@ -114,6 +114,8 @@ class GameServer:
                         if data["name"] in self.game_player.values():
                             logger.error("Player <%s> already exists", data["name"])
                             await websocket.close()
+                            if not self.game.running:
+                                del self.game_player[data["name"]]
                             continue
                         logger.info("<%s> has joined", data["name"])
                         await self.players.put(Player(data["name"], websocket))
