@@ -110,6 +110,7 @@ def get_game():
                 Game.id,
                 Game.timestamp,
                 Game.player,
+                Game.players,
                 func.max(Game.score).label("score"),
                 )
             .group_by(Game.player)

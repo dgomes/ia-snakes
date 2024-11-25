@@ -34,7 +34,7 @@ function generateTable(table, data,page) {
 		row.setAttribute('id', "pos"+i);
                 for (key in element) {
                         cell = row.insertCell();
-			if(key == "score" && element[key] < 10000) {
+			if(key == "score" && element[key] < 50) {
 				cell.setAttribute("style", "color:red;");
 			}
                         if(key == "id") {
@@ -59,6 +59,7 @@ function generateTable(table, data,page) {
 <tr>
 <th>Pos</th>
 <th>Player</th>
+<th>Challengers</th>
 <th>Score</th>
 <th>Timestamp</th>
 </tr>
