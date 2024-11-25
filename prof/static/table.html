@@ -42,10 +42,13 @@ function generateTable(table, data,page) {
 				ii = document.createTextNode(i); //show position not ID
 				br.appendChild(ii);
                         	cell.appendChild(br);
+			} else if(key == "players") {
+				text = Number(element[key]) - 1
+				cell.appendChild(document.createTextNode(text));
                         } else {
                                 text = element[key];
                         	cell.appendChild(document.createTextNode(text));
-                        }
+			}
                 }
         }
 }
