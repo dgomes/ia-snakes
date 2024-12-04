@@ -92,7 +92,7 @@ class GameServer:
         if isinstance(group, dict):
             group = group.keys()
 
-        for client in group:
+        for client in list(group):
             try:
                 await client.send(json.dumps(info))
             except Exception:
