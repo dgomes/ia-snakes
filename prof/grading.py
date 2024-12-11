@@ -30,9 +30,8 @@ limiter = Limiter(
 flask_log = logging.getLogger("werkzeug")
 flask_log.setLevel(logging.WARNING)
 
-logger = logging.getLogger("IA Ranking")
-logger.setLevel(logging.INFO)
-
+logger = app.logger
+logger.setLevel(logging.DEBUG)
 
 # Data model
 class Game(db.Model):
@@ -42,18 +41,20 @@ class Game(db.Model):
     score = db.Column(db.Integer)
     seed = db.Column(db.Integer)
     players = db.Column(db.Integer)
+    steps = db.Column(db.Integer)
 
-    def __init__(self, player, score, seed, players):
+    def __init__(self, player, score, seed, players, steps):
         self.player = player
         self.score = score
         self.seed = seed
         self.players = players
+        self.steps = steps
 
 # Schema
 class GameSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id", "timestamp", "player", "score", "seed", "players")
+        fields = ("id", "timestamp", "player", "score", "seed", "players", "steps")
 
 
 SINGLE_GAME_SCHEMA = GameSchema()
@@ -67,6 +68,7 @@ def index():
 
 # endpoint to create new game
 @app.route("/game", methods=["POST"])
+@limiter.exempt         #TODO remove for wise guys
 def add_game():
     if new_game := request.json:
         logger.info(
@@ -82,6 +84,7 @@ def add_game():
             new_game.get("score"),
             new_game.get("seed"),
             new_game.get("players", 1),
+            new_game.get("steps", -1),
         )
 
         db.session.add(new_game)
@@ -144,4 +147,5 @@ if __name__ == "__main__":
         with app.app_context():
             db.create_all()
 
-    app.run(debug=False, host="0.0.0.0", port=80)
+    logger.info("Starting")
+    app.run(debug=True, host="0.0.0.0", port=9000)

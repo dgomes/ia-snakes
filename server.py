@@ -7,6 +7,7 @@ import json
 import logging
 import os.path
 import random
+import time
 from collections import namedtuple
 from typing import Any, Dict, Set
 
@@ -212,7 +213,9 @@ class GameServer:
                             game_record = {
                                 "player": player.name,
                                 "score": self.game.snakes[player.name].score,
-                                "players": self.number_of_players, 
+                                "players": self.number_of_players,
+                                "steps": self.game._step,
+                                "seed": self.seed, 
                             }
                             requests.post(self.grading, json=game_record, timeout=2)
                 except RequestException as err:
