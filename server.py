@@ -142,6 +142,17 @@ class GameServer:
             if websocket in self.viewers:
                 self.viewers.remove(websocket)
 
+    def grade(self, player):
+        game_record = { 
+            "player": player.name,
+            "score": self.game.snakes[player.name].score,
+            "players": self.number_of_players,
+            "steps": self.game._step,
+            "seed": self.seed, 
+            }
+        requests.post(self.grading, json=game_record, timeout=2)
+ 
+
     async def mainloop(self):
         """Run the game."""
         while True:
@@ -192,6 +203,8 @@ class GameServer:
                                     "Player <%s> disconnected, could not send state",
                                     player.name,
                                 )
+                                if self.grading:
+                                    self.grade(player)
                                 game_players.remove(player)
 
                 game_over = {"highscores": self.save_highscores()}
@@ -210,14 +223,7 @@ class GameServer:
                 try:
                     if self.grading:
                         for player in game_players:
-                            game_record = {
-                                "player": player.name,
-                                "score": self.game.snakes[player.name].score,
-                                "players": self.number_of_players,
-                                "steps": self.game._step,
-                                "seed": self.seed, 
-                            }
-                            requests.post(self.grading, json=game_record, timeout=2)
+                            self.grade(player)
                 except RequestException as err:
                     logger.error(err)
                     logger.warning("Could not save score to server")
