@@ -1,5 +1,6 @@
 # ia-snakes
 Snakes clone for AI teaching
+![Demo Animation](screen_record.gif)
 
 ## How to install
 
